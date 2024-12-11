@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="Fonts" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-image: url(data/jpg/1.jpg);
+            background-color: #ffffff;
+            background-size: cover;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            overflow: hidden;
+            transition: background-image 1s ease-in-out; /* Плавный переход фона */
+        }
+        .login-container {
+            background: #ffffff1a;
+            border-radius: 8px;
+            margin-right: 20px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 10px rgb(0, 0, 0);
+            padding: 40px;
+            width: 300px;
+            text-align: center;
+            z-index: 1; 
+        }
+        h2 {
+            color: #333;
+        }
+        .error {
+            color: red;
+            text-align: center;
+        }
+        label {
+            margin-bottom: 5px;
+            display: block;
+            color: #555;
+        }
+        .input-container {
+            position: relative;
+            margin: 10px 0 20px;
+        }
+        input[type="text"],
+        input[type="password"] {
+            width: 92.5%;
+            padding: 10px 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 14px;
+            margin-top: 10px;
+        }
+        .toggle-password {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            width: 24px; 
+            height: 24px; 
+            margin-top: 5px;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #008000;
+            border: none;
+            border-radius: 4px;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            margin-bottom: 20px; 
+            margin-top: 10px;
+        }
+        button:hover {
+            background-color: #444;
+        }
+        .logo {
+            width: 100px;
+            margin-bottom: 10px;
+        }
+        .close-button {
+            background-color: #e74c3c;
+        }
+        .register-button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 10px 15px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            margin-top: 10px;
+            transition: background-color 0.3s;
+        }
+        .register-button:hover {
+            background-color: #444;
+        }
+        .additional-container {
+            background: #ffffff1a;
+            border-radius: 8px;
+            margin-right: 20px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 10px rgb(0, 0, 0);
+            padding: 40px;
+            width: 300px;
+            text-align: center;
+            z-index: 1; 
+        }
+    </style>
+<script>
+    function closeWindow() {
+        window.close();
+    }
+
+    function validateRegistration(event) {
+        event.preventDefault(); 
+        const username = document.getElementById('username').value;
+        const email = document.getElementById('email').value;
+        const password = document.getElementById('password').value;
+        const confirmPassword = document.getElementById('confirm-password').value;
+
+        if (password !== confirmPassword) {
+            document.getElementById('error-message').innerText = "Пароли не совпадают.";
+            return;
+        }
+
+        if (password.length < 8) {
+            document.getElementById('error-message').innerText = "Пароль должен содержать не менее 8 символов.";
+            return;
+        }
+
+        fetch('register.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ username, password, email })
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('message').innerText = data.message;
+                if (data.success) {
+                alert("Регистрация успешна!");
+                    window.location.href = 'signinpage.html'; 
+                }
+            })
+            .catch(error => {
+                console.error('Ошибка:', error);
+                document.getElementById('message').innerText = 'Произошла ошибка. Попробуйте еще раз.';
+            });
+    }
+
+    function togglePasswordVisibility(inputId, iconId) {
+        const input = document.getElementById(inputId);
+        const icon = document.getElementById(iconId);
+        if (input.type === "password") {
+            input.type = "text";
+            icon.src = "P-show.png"; 
+        } else {
+            input.type = "password";
+            icon.src = "P-hide.png"; 
+        }
+    }
+</script>
+</head>
+<body>
+    <div class="login-container">
+        <a href="https://belovokyzgty.ru/?ysclid=m1okzu5oek159249" target="_blank">
+            <img src="Emblem.png" alt="Логотип" class="logo">
+        </a>
+        <h2>Регистрация</h2>
+
+        <form onsubmit="validateRegistration(event)">
+            <div class="input-container">
+                <input type="text" id="username" placeholder="Введите логин" required>
+            </div>
+            <div class="input-container">
+                <input type="text" id="email" placeholder="Введите почту" required>
+            </div>
+            <div class="input-container">
+                <input type="password" id="password" placeholder="Введите пароль" required>
+                <img id="toggle-password1" class="toggle-password" src="P-hide.png" onclick="togglePasswordVisibility('password', 'toggle-password1')" alt="Показать/Скрыть пароль">
+            </div>
+            <div class="input-container">
+                <input type="password" id="confirm-password" placeholder="Подтвердите пароль" required>
+                <img id="toggle-password2" class="toggle-password" src="P-hide.png" onclick="togglePasswordVisibility('confirm-password', 'toggle-password2')" alt="Показать/Скрыть пароль">
+            </div>
+            <div class="error" id="error-message"></div>
+            <div id="message" class="error"></div>
+            <button type="submit">Зарегистрироваться</button>
+        </form>
+        <button class="close-button" onclick="closeWindow()">Закрыть вкладку</button>
+        <a href="signinpage.html" class="register-button">Уже есть аккаунт?</a>
+    </div>
+</div>
+</form>
+
+
+</body>
+</html>

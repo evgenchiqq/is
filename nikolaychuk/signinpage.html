@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="Fonts" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-image: url(data/jpg/1.jpg);
+            background-color: #ffffff;
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            overflow: hidden;
+            transition: background-image 1s ease-in-out;
+        }
+        .login-container {
+            background: #ffffff1a;
+            border-radius: 8px;
+            margin-right: 20px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 10px rgb(0, 0, 0);
+            padding: 40px;
+            width: 300px;
+            text-align: center;
+            z-index: 1; 
+            
+        }
+        h2 {
+            color: #333;
+        }
+        .error {
+            color: red;
+            text-align: center;
+        }
+        label {
+            margin-bottom: 5px;
+            display: block;
+            color: #555;
+        }
+        input[type="text"],
+        input[type="password"] {
+            width: 92.5%;
+            padding: 10px;
+            margin: 10px 0 20px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 14px;
+            position: relative;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #008000;
+            border: none;
+            border-radius: 4px;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            margin-bottom: 20px;
+            margin-top: 10px;
+                }
+        button:hover {
+            background-color: #444;
+        }
+        .logo {
+            width: 100px;
+            margin-bottom: 10px;
+        }
+        .close-button {
+            background-color: #e74c3c;
+        }
+        .toggle-password {
+            position: absolute;
+            right: 10px;
+            top: 42.5%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            width: 24px;
+            height: 24px;
+        }
+        .register-button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 10px 15px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            margin-top: 10px;
+            transition: background-color 0.3s;
+        }
+        .register-button:hover {
+            background-color: #444;
+        }
+    </style>
+<script>
+    function togglePasswordVisibility(inputId, iconId) {
+        const input = document.getElementById(inputId);
+        const icon = document.getElementById(iconId);
+        if (input.type === "password") {
+            input.type = "text";
+            icon.src = "P-show.png"; 
+        } else {
+            input.type = "password";
+            icon.src = "P-hide.png"; 
+        }}
+        function validateLogin(event) {
+    event.preventDefault(); 
+
+    const username = document.getElementById('username').value.trim();
+    const password = document.getElementById('password').value.trim();
+
+    if (!username || !password) {
+        document.getElementById('error-message').innerText = 'Логин и пароль обязательны.';
+        return;
+    }
+
+    fetch('signin.php', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ username, password })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            window.location.href = data.redirect; 
+        } else {
+            document.getElementById('error-message').innerText = data.message; 
+        }
+    })
+    .catch(error => {
+        console.error('Ошибка:', error);
+        document.getElementById('error-message').innerText = 'Произошла ошибка. Попробуйте еще раз.';
+    });
+}
+    </script>
+</head>
+<body>
+
+<div class="login-container">
+    <a href="https://belovokyzgty.ru/?ysclid=m1okzu5oek159249" target="_blank">
+        <img src="Emblem.png" alt="Логотип" class="logo">
+    </a>
+    <h2>Вход в аккаунт</h2>
+    
+    <form onsubmit="validateLogin(event)">
+        <input type="text" id="username" placeholder="Введите логин" required>
+        <div style="position: relative;">
+            <input type="password" id="password" placeholder="Введите пароль" required>
+            <img id="toggle-password1" class="toggle-password" src="P-hide.png" onclick="togglePasswordVisibility('password', 'toggle-password1')" alt="Показать/Скрыть пароль">
+        </div>
+
+        <div class="error" id="error-message"></div>
+        
+        <button type="submit">Войти</button>
+        <button type="button" class="close-button" onclick="closeWindow()">Закрыть вкладку</button>
+    </form>
+    
+    <a href="registerpage.html" class="register-button">Нет аккаунта?</a>
+</div>
